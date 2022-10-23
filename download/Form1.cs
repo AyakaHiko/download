@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace download
@@ -18,51 +13,67 @@ namespace download
         public Form1()
         {
             InitializeComponent();
+            Downloader.StartDownload += Downloader_StartDownload;
+            Downloader.EndDownload += Downloader_EndDownload;
+            Downloader.Error+= (error) => MessageBox.Show(error);
         }
 
-        private void downloadBtn_Click(object sender, EventArgs e)
+        private void Downloader_EndDownload(string path, bool result)
         {
-            _downloadAsync();
+            Action end = () =>
+             downloadPanel.Controls.RemoveByKey(path);
+            if (InvokeRequired)
+                Invoke(end);
+            else
+            {
+                end();
+            }
+
+            var res = result ? "Download successfully!": "Download end!";
+            MessageBox.Show(res);
         }
 
-        private Task _writeAsync(byte[] data, string path) => Task.Factory.StartNew(() => _write(data, path));
-        private void _write(byte[] data, string path)
+        private void Downloader_StartDownload(string path)
         {
-            if (data == null)
+            if (InvokeRequired)
+                Invoke(new Action(() => _addDownload(path)));
+            else
+                _addDownload(path);
+        }
+
+        private async void downloadBtn_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(addressBox.Text))
                 return;
-
-            using (Stream stream = new FileStream(path, FileMode.OpenOrCreate))
-            {
-                stream.Write(data, 0, data.Length);
-            }
+            await Downloader.DownloadAsync(addressBox.Text, _save());
         }
 
-        private Task _downloadAsync() => Task.Factory.StartNew(_download);
-        private void _download()
+        private string _save()
         {
-
-            try
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "All | *.*";
+            return saveFileDialog.ShowDialog() != DialogResult.OK ? null : saveFileDialog.FileName;
+        }
+        private void _addDownload(string path)
+        {
+            var panel = new FlowLayoutPanel();
+            panel.AutoSize = true;
+            panel.FlowDirection = FlowDirection.LeftToRight;
+            Label pathLbl = new Label();
+            pathLbl.Text = path;
+            panel.Controls.Add(pathLbl);
+            ProgressBar bar = new ProgressBar();
+            bar.Style = ProgressBarStyle.Marquee;
+            panel.Controls.Add(bar);
+            Button cancelButton = new Button();
+            cancelButton.Text = "Cancel";
+            cancelButton.Click += (sender, args) =>
             {
-                if (string.IsNullOrEmpty(addressBox.Text))
-                    return;
-                WebClient webClient = new WebClient();
-                var data = webClient.DownloadData(addressBox.Text);
-
-                Func<string> save = () =>
-                {
-                    SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.Filter = "All | *.*";
-                    return saveFileDialog.ShowDialog() != DialogResult.OK ? null : saveFileDialog.FileName;
-                };
-                string path= InvokeRequired ? Invoke(save).ToString() : save();
-                
-                _write(data, path);
-            }
-            catch (Exception e)
-            {
-
-            }
-
+                Downloader.CancelDownload(path);
+            };
+            panel.Controls.Add(cancelButton);
+            panel.Name = path;
+            downloadPanel.Controls.Add(panel);
         }
     }
 }
