@@ -40,7 +40,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.addressBox.Location = new System.Drawing.Point(61, 12);
             this.addressBox.Name = "addressBox";
-            this.addressBox.Size = new System.Drawing.Size(369, 20);
+            this.addressBox.Size = new System.Drawing.Size(368, 20);
             this.addressBox.TabIndex = 0;
             // 
             // label1
@@ -57,11 +57,10 @@
             // 
             // downloadBtn
             // 
-            this.downloadBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.downloadBtn.Location = new System.Drawing.Point(436, 10);
+            this.downloadBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadBtn.Location = new System.Drawing.Point(435, 10);
             this.downloadBtn.Name = "downloadBtn";
-            this.downloadBtn.Size = new System.Drawing.Size(75, 23);
+            this.downloadBtn.Size = new System.Drawing.Size(75, 25);
             this.downloadBtn.TabIndex = 2;
             this.downloadBtn.Text = "Download";
             this.downloadBtn.UseVisualStyleBackColor = true;
@@ -69,9 +68,11 @@
             // 
             // downloadPanel
             // 
-            this.downloadPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.downloadPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.downloadPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.downloadPanel.Location = new System.Drawing.Point(0, 39);
+            this.downloadPanel.Location = new System.Drawing.Point(0, 41);
             this.downloadPanel.Name = "downloadPanel";
             this.downloadPanel.Size = new System.Drawing.Size(520, 220);
             this.downloadPanel.TabIndex = 3;
@@ -80,11 +81,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 259);
+            this.ClientSize = new System.Drawing.Size(519, 261);
             this.Controls.Add(this.downloadPanel);
             this.Controls.Add(this.downloadBtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.addressBox);
+            this.MinimumSize = new System.Drawing.Size(535, 300);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
